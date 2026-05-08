@@ -1,0 +1,37 @@
+const https = require("https");
+
+const options = {
+  hostname: "api.anthropic.com",
+  path: "/v1/messages",
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-api-key": process.env.ANTHROPIC_API_KEY,
+    "anthropic-version": "2023-06-01",
+  },
+};
+
+const body = JSON.stringify({
+  model: "claude-haiku-4-5-20251001",
+  max_tokens: 10,
+  messages: [{ role: "user", content: "Say hi" }],
+});
+
+console.log("Testing API key:", process.env.ANTHROPIC_API_KEY ? "Key found ✓" : "❌ NO API KEY FOUND");
+
+const req = https.request(options, (res) => {
+  let data = "";
+  res.on("data", (chunk) => (data += chunk));
+  res.on("end", () => {
+    if (res.statusCode === 200) {
+      console.log("✅ API key works! Anthropic API is reachable.");
+    } else {
+      const parsed = JSON.parse(data);
+      console.log("❌ API Error:", res.statusCode, parsed.error?.message || data);
+    }
+  });
+});
+
+req.on("error", (e) => console.log("❌ Network error:", e.message));
+req.write(body);
+req.end();
