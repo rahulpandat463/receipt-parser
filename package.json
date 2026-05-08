@@ -1,0 +1,14 @@
+{
+  "name": "receipt-parser",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run install:all && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
